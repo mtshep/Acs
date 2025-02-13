@@ -6,7 +6,7 @@ const headers = {
     "SOAPAction": "http://www.friendly-tech.com/FTSetDeviceParameters"
 };
 
-const deviceSN = "CP2130JC6T2";
+const deviceSN = "CP2315JC1PJ";
 const creator = "Cal Shep";
 
 const setDeviceParameters = async (name, value) => {
