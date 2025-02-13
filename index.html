@@ -15,25 +15,43 @@
         <option value="FPMT000746">FPMT000746 - 71 Port-E-Chee Avenue, Douglas</option>
         <option value="FPMT000789">FPMT000789 - 5 The Paddocks, Queens Road, Port St Mary</option>
     </select>
-    <p id="errorMessage" class="text-red-600 mt-2 hidden">Unfortunately, you are not on our First Class Fibre. Please speak to a member of our fibre team to unlock our self-service portal.
-        <div class="text-center mt-8">
-            <a href="#" class="bg-yellow-500 text-white px-6 py-3 rounded shadow-lg hover:bg-yellow-600 text-lg font-semibold">Visit Knowledge Base</a>
-            <div class="flex justify-center gap-4 mt-6">
-                <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Start a New Chat</a>
-                <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Create a Support Ticket</a>
-            </div></p>
+    <p id="errorMessage" class="text-red-600 mt-2 hidden">Unfortunately, you are not on our First Class Fibre. Please speak to a member of our fibre team to unlock our self-service portal.</p>
+    <div id="serviceOptions" class="text-center mt-8 hidden">
+        <a href="#" class="bg-yellow-500 text-white px-6 py-3 rounded shadow-lg hover:bg-yellow-600 text-lg font-semibold">Visit Knowledge Base</a>
+        <div class="flex justify-center gap-4 mt-6">
+            <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Start a New Chat</a>
+            <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Create a Support Ticket</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkService() {
+        const serviceSelect = document.getElementById('serviceSelect');
+        const errorMessage = document.getElementById('errorMessage');
+        const serviceOptions = document.getElementById('serviceOptions');
+
+        if (serviceSelect.value === 'FPMT000789') {
+            errorMessage.classList.add('hidden');
+            serviceOptions.classList.remove('hidden');
+        } else {
+            errorMessage.classList.remove('hidden');
+            serviceOptions.classList.add('hidden');
+        }
+    }
+</script>
 
     <div id="networkDetails" class="hidden mt-6">
         <h2 class="text-2xl font-bold text-blue-600 border-b pb-2">Network Status</h2>
         <div class="flex gap-4 mt-4">
             <div class="flex-1 p-3 text-white text-center font-semibold rounded bg-red-500">
-                Fibre ONT Status: Bad <span>❌</span>
+                Fibre ONT Status: Bad <div>❌</div>
             </div>
             <div class="flex-1 p-3 text-white text-center font-semibold rounded bg-green-500">
-                Router Status: Connected <span>✔️</span>
+                Router Status: Connected <div>✔️</div>
             </div>
             <div class="flex-1 p-3 text-white text-center font-semibold rounded bg-green-500">
-                Mesh Network: Active <span>✔️</span>
+                Mesh Network: Active <div>✔️</div>
             </div>
         </div>
 
