@@ -125,7 +125,7 @@
 <script>
         function runWiFiReset() {
             // Assuming wifireset.js is a Node.js script, you can use an AJAX call to trigger it on the server
-            fetch('/run-wifireset', {
+            fetch('run-wifireset', {
                 method: 'POST'
             })
             .then(response => response.text())
