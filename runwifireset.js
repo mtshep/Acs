@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const app = express();
 const port = 3000;
 
-app.post('/run-wifireset', (req, res) => {
+app.post('runwifireset', (req, res) => {
     exec('wifireset.js', (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing script: ${error}`);
