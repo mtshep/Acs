@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Status</title>
+    <link rel="stylesheet" href="https://manxtelecom.com/css/style.css">
+    <script>
+        function fetchDeviceData() {
+            let serial = document.getElementById("serialInput").value;
+            if (!serial) {
+                alert("Please enter a serial number.");
+                return;
+            }
+
+            // Append serial number to script URLs
+            loadScript(`ACSScripts/routerstatus.js?serial=${serial}`);
+            loadScript(`ACSScripts/meshstatus.js?serial${serial}`);
+            loadScript(`ACSScripts/topology.js?serial=${serial}`);
+            loadScript(`ACSScripts/deviceinfo.js?serial=${serial}`);
+        }
+
+        function loadScript(src) {
+            let script = document.createElement("script");
+            script.src = src;
+            document.body.appendChild(script);
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+        .device-info, .mesh-status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .mesh-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .mesh-box {
+            width: 150px;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .good { background-color: green; }
+        .moderate { background-color: orange; }
+        .poor { background-color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Serial Number</h2>
+        <input type="text" id="serialInput" placeholder="Enter Serial Number">
+        <button onclick="fetchDeviceData()">Submit</button>
+
+        <div id="deviceInfo" class="device-info" style="display:none;"></div>
+        <div id="meshStatus" class="mesh-status" style="display:none;">
+            <h3>Mesh Status</h3>
+            <div class="mesh-container" id="meshContainer"></div>
+        </div>
+    </div>
+</body>
+</html>

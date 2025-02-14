@@ -1,18 +1,10 @@
 const express = require('express');
-const { exec } = require('child_process');
+const path = require('path');
 const app = express();
 const port = 3000;
 
-app.post('/run-wifireset', (req, res) => {
-    exec('node path/to/server.js', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing script: ${error}`);
-            return res.status(500).send('Error executing script');
-        }
-        console.log(`Script output: ${stdout}`);
-        res.send('WiFi reset script executed successfully');
-    });
-});
+// Serve static files from the root directory
+app.use(express.static(path.join(__dirname, '/')));
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
