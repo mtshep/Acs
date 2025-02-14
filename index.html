@@ -2,200 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=75%, initial-scale=1.0">
-    <title>My Home WiFi Network</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Status</title>
+    <link rel="stylesheet" href="https://manxtelecom.com/css/style.css">
+    <script>
+        function fetchDeviceData() {
+            let serial = document.getElementById("serialInput").value;
+            if (!serial) {
+                alert("Please enter a serial number.");
+                return;
+            }
+
+            // Append serial number to script URLs
+            loadScript(`ACSScripts/routerstatus.js?serial=${serial}`);
+            loadScript(`ACSScripts/meshstatus.js?serial${serial}`);
+            loadScript(`ACSScripts/topology.js?serial=${serial}`);
+            loadScript(`ACSScripts/deviceinfo.js?serial=${serial}`);
+        }
+
+        function loadScript(src) {
+            let script = document.createElement("script");
+            script.src = src;
+            document.body.appendChild(script);
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+        .device-info, .mesh-status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .mesh-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .mesh-box {
+            width: 150px;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .good { background-color: green; }
+        .moderate { background-color: orange; }
+        .poor { background-color: red; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
+    <div class="container">
+        <h2>Enter Serial Number</h2>
+        <input type="text" id="serialInput" placeholder="Enter Serial Number">
+        <button onclick="fetchDeviceData()">Submit</button>
 
-<div class="max-w-3xl mx-auto bg-white p-6 mt-10 shadow-lg rounded-lg">
-    <h2 class="text-2xl font-bold text-blue-600 border-b pb-2">Select Your Service</h2>
-    <select id="serviceSelect" onchange="checkService()" class="w-full p-2 border rounded mt-2">
-        <option value="">-- Select Your Service --</option>
-        <option value="FPMT000746">FPMT000746 - 71 Port-E-Chee Avenue, Douglas</option>
-        <option value="FPMT000789">FPMT000789 - 5 The Paddocks, Queens Road, Port St Mary</option>
-    </select>
-    <p id="errorMessage" class="text-red-600 mt-2 hidden">Unfortunately, you are not on our First Class Fibre. Please speak to a member of our fibre team to unlock our self-service portal.</p>
-    <div id="serviceOptions" class="text-center mt-8 hidden">
-        <a href="#" class="bg-yellow-500 text-white px-6 py-3 rounded shadow-lg hover:bg-yellow-600 text-lg font-semibold">Visit Knowledge Base</a>
-        <div class="flex justify-center gap-4 mt-6">
-            <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Start a New Chat</a>
-            <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Create a Support Ticket</a>
+        <div id="deviceInfo" class="device-info" style="display:none;"></div>
+        <div id="meshStatus" class="mesh-status" style="display:none;">
+            <h3>Mesh Status</h3>
+            <div class="mesh-container" id="meshContainer"></div>
         </div>
     </div>
-</div>
-
-<script>
-    function checkService() {
-        const serviceSelect = document.getElementById('serviceSelect');
-        const errorMessage = document.getElementById('errorMessage');
-        const serviceOptions = document.getElementById('serviceOptions');
-
-        if (serviceSelect.value === 'FPMT000789') {
-            errorMessage.classList.add('hidden');
-            serviceOptions.classList.remove('hidden');
-        } else {
-            errorMessage.classList.remove('hidden');
-            serviceOptions.classList.add('hidden');
-        }
-    }
-</script>
-
-    <div id="networkDetails" class="hidden mt-6">
-        <h2 class="text-2xl font-bold text-blue-600 border-b pb-2">Network Status</h2>
-        <div class="flex gap-4 mt-4">
-            <div class="flex-1 p-3 text-white text-center font-semibold rounded bg-red-500">
-                Fibre ONT Status: Bad <div>❌</div>
-            </div>
-            <div class="flex-1 p-3 text-white text-center font-semibold rounded bg-green-500">
-                Router Status: Connected <div>✔️</div>
-            </div>
-            <div class="flex-1 p-3 text-white text-center font-semibold rounded bg-green-500">
-                Mesh Network: Active <div>✔️</div>
-            </div>
-        </div>
-<script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true });
-    </script>
-        <h2 class="text-2xl font-bold text-blue-600 border-b pb-2 mt-6">Network Topology</h2>
-        <div class="w-full h-64 mt-4 border rounded">
-        <div class="mermaid">
-           flowchart TD;
-
-node101[Router];
-node102{{Mesh}};
-node103{{Mesh}};
-node104{{Mesh}};
-node101--Link Type -Wi-FiConnection Qualitity -Good-->node102;
-node102--Link Type -Wi-FiConnection Qualitity -Good-->node103;
-node102--Link Type -Wi-FiConnection Qualitity -Good-->node104;
-node105((Unknown-f0:b0:40:15:66:bc));
-node105(Unknown-f0:b0:40:15:66:bc);
-node109(Ross-iPhone);
-node110(SonosZP);
-node111(SonosZP-3);
-node112(Unknown-48:e1:e9:4a:1a:5b);
-node113(09AC01AC30200314);
-node114(Carolines-MBP);
-node115(SonosZP-2);
-node116(iPhone-2);
-node117(Unknown-44:3d:54:1e:d3:71);
-node118(Samsung);
-node119(Unknown-90:39:5f:c4:96:07);
-node120(LGwebOSTV);
-node121(Unknown-48:e1:e9:4a:1b:b3);
-node122(SonosZP-5);
-node123(SonosZP-4);
-node124(Unknown-48:e1:e9:4a:1b:41);
-node125(SonosZP-8);
-node126(Unknown-48:e1:e9:4a:1c:cc);
-node101--Link Type -802.11nConnection Qualitity -98-->node105;
-node101--Link Type -802.11axConnection Qualitity -102-->node106;
-node102--Link Type -0Connection Qualitity -116-->node107;
-node102--Link Type -802.11axConnection Qualitity -100-->node108;
-node102--Link Type -802.11axConnection Qualitity -98-->node109;
-node103--Link Type -802.11nConnection Qualitity -184-->node110;
-node103--Link Type -802.11nConnection Qualitity -64-->node111;
-node103--Link Type -802.11nConnection Qualitity -86-->node112;
-node103--Link Type -0Connection Qualitity -92-->node113;
-node103--Link Type -0Connection Qualitity -76-->node114;
-node103--Link Type -802.11gConnection Qualitity -110-->node115;
-node103--Link Type -802.11axConnection Qualitity -108-->node116;
-node103--Link Type -0Connection Qualitity -96-->node117;
-node103--Link Type -0Connection Qualitity -84-->node118;
-node104--Link Type -0Connection Qualitity -132-->node119;
-node104--Link Type -0Connection Qualitity -138-->node120;
-node104--Link Type -802.11nConnection Qualitity -80-->node121;
-node104--Link Type -802.11gConnection Qualitity -106-->node122;
-node104--Link Type -802.11nConnection Qualitity -146-->node123;
-node104--Link Type -802.11nConnection Qualitity -134-->node124;
-node104--Link Type -802.11nConnection Qualitity -94-->node125;
-node104--Link Type -802.11nConnection Qualitity -92-->node126;
-
-        </div>
-    </div>
-
-        <h2 class="text-2xl font-bold text-blue-600 border-b pb-2 mt-6">Troubleshooting</h2>
-        <div class="grid grid-cols-2 gap-4 mt-4">
-            <button class="bg-blue-500 text-white p-3 rounded hover:bg-blue-700">Reboot Router</button>
-            <button onclick="runWiFiReset()" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-700">Restart Wi-Fi Network</button>
-            <button class="bg-blue-500 text-white p-3 rounded hover:bg-blue-700">Change Wi-Fi Name</button>
-            <button class="bg-blue-500 text-white p-3 rounded hover:bg-blue-700">Change Wi-Fi Password</button>
-        </div>
-
-        <h2 class="text-2xl font-bold text-blue-600 border-b pb-2 mt-6">Your Current Connected Devices</h2>
-        <table class="w-full mt-4 border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-blue-500 text-white">
-                    <th class="p-2 border border-gray-300">Device Name</th>
-                    <th class="p-2 border border-gray-300">Connection Type</th>
-                    <th class="p-2 border border-gray-300">Signal Strength</th>
-                </tr>
-            </thead>
-            <tbody id="devicesTableBody" class="bg-white"></tbody>
-        </table>
-
-        <div class="text-center mt-8">
-            <a href="#" class="bg-yellow-500 text-white px-6 py-3 rounded shadow-lg hover:bg-yellow-600 text-lg font-semibold">Visit Knowledge Base</a>
-            <div class="flex justify-center gap-4 mt-6">
-                <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Start a New Chat</a>
-                <a href="#" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Create a Support Ticket</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function checkService() {
-        var service = document.getElementById("serviceSelect").value;
-        document.getElementById("errorMessage").classList.toggle("hidden", service !== "FPMT000789");
-        document.getElementById("networkDetails").classList.toggle("hidden", service !== "FPMT000746");
-    }
-
-    function getSignalStrengthClass(strength) {
-        return strength >= 100 ? 'text-green-500' : strength >= 70 ? 'text-yellow-500' : 'text-red-500';
-    }
-
-    function getSignalIcon(strength) {
-        return strength >= 100 ? '✔️' : strength >= 70 ? '⚠️' : '❌';
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        var devices = [
-            { name: "Ross-iPhone", type: "Wi-Fi", strength: 98 },
-            { name: "SonosZP", type: "Wi-Fi", strength: 184 },
-            { name: "SonosZP-3", type: "Wi-Fi", strength: 64 },
-            { name: "Carolines-MBP", type: "Wi-Fi", strength: 76 },
-            { name: "LGwebOSTV", type: "Ethernet", strength: null }
-        ];
-
-        var tableBody = document.getElementById("devicesTableBody");
-        devices.forEach(device => {
-            var row = document.createElement("tr");
-            row.innerHTML = `<td class="p-2 border border-gray-300">${device.name}</td>
-                <td class="p-2 border border-gray-300">${device.type}</td>
-                <td class="p-2 border border-gray-300">${device.strength !== null ? `<span class="${getSignalStrengthClass(device.strength)} font-bold">${device.strength} ${getSignalIcon(device.strength)}</span>` : ''}</td>`;
-            tableBody.appendChild(row);
-        });
-    });
-</script>
-<script>
-        function runWiFiReset() {
-            fetch('/run-wifireset', {
-                method: 'POST'
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
-</body>
-</html>
-
 </body>
 </html>
