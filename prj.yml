@@ -1,0 +1,2 @@
+- name: Keycloak Setup Action
+  uses: DreamsOfImran/keycloak-setup@v0.0.2
